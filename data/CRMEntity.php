@@ -1305,6 +1305,19 @@ class CRMEntity {
 		global $current_user;
 		$thismodule = $_REQUEST['module'];
 
+		// Custom View
+		$customView = new CustomView($currentModule);
+		$viewid = $customView->getViewId($currentModule);
+
+		// QueryGenerator
+		$queryGenerator = new QueryGenerator($thismodule, $current_user);
+		
+		if ($viewid != "0") {
+			$queryGenerator->initForCustomViewById($viewid);
+		} else {
+			$queryGenerator->initForDefaultCustomView();
+		}
+
 		include 'include/utils/ExportUtils.php';
 
 		//To get the Permitted fields query and the permitted fields list
@@ -1314,6 +1327,9 @@ class CRMEntity {
 		if ($thismodule=='Faq') {
 			$fields_list = str_replace(",vtiger_faqcomments.comments as 'Add Comment'", ' ', $fields_list);
 		}
+
+		// Initialize query with queryGenerator
+		$query = $queryGenerator->getQuery();
 
 		$query = "SELECT $fields_list, vtiger_users.user_name AS user_name
 			FROM vtiger_crmentity INNER JOIN $this->table_name ON vtiger_crmentity.crmid=$this->table_name.$this->table_index";
