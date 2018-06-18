@@ -1306,8 +1306,8 @@ class CRMEntity {
 		$thismodule = $_REQUEST['module'];
 
 		// Custom View
-		$customView = new CustomView($currentModule);
-		$viewid = $customView->getViewId($currentModule);
+		$customView = new CustomView($thisModule);
+		$viewid = $customView->getViewId($thisModule);
 
 		// QueryGenerator
 		$queryGenerator = new QueryGenerator($thismodule, $current_user);
@@ -1331,8 +1331,8 @@ class CRMEntity {
 		// Initialize query with queryGenerator
 		$query = $queryGenerator->getQuery();
 
-		$query = "SELECT $fields_list, vtiger_users.user_name AS user_name
-			FROM vtiger_crmentity INNER JOIN $this->table_name ON vtiger_crmentity.crmid=$this->table_name.$this->table_index";
+		//$query = "SELECT $fields_list, vtiger_users.user_name AS user_name
+			//FROM vtiger_crmentity INNER JOIN $this->table_name ON vtiger_crmentity.crmid=$this->table_name.$this->table_index";
 
 		if (!empty($this->customFieldTable)) {
 			$query .= " INNER JOIN ".$this->customFieldTable[0]." ON ".$this->customFieldTable[0].'.'.$this->customFieldTable[1] .
