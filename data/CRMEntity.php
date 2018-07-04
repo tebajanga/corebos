@@ -1359,7 +1359,7 @@ class CRMEntity {
 		}
 		$query .= $this->getNonAdminAccessControlQuery($thismodule, $current_user);
 
-		// Parsing the Queries.
+		// Parsing $where.
 		preg_match_all("/(?<=\().*?(?=\.)/", $where, $tables);
 
 		// Replacing unwanted characters
