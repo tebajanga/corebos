@@ -1319,30 +1319,75 @@ class CRMEntity {
 		}
 
 		include 'include/utils/ExportUtils.php';
-
 		//To get the Permitted fields query and the permitted fields list
 		$sql = getPermittedFieldsQuery($thismodule, "detail_view");
-
 		$fields_list = getFieldsListFromQuery($sql);
 		if ($thismodule=='Faq') {
 			$fields_list = str_replace(",vtiger_faqcomments.comments as 'Add Comment'", ' ', $fields_list);
 		}
+		$query = "SELECT $fields_list, vtiger_users.user_name AS user_name
+			FROM vtiger_crmentity INNER JOIN $this->table_name ON vtiger_crmentity.crmid=$this->table_name.$this->table_index";
+		if (!empty($this->customFieldTable)) {
+			$query .= " INNER JOIN ".$this->customFieldTable[0]." ON ".$this->customFieldTable[0].'.'.$this->customFieldTable[1] .
+				" = $this->table_name.$this->table_index";
+		}
+		$query .= " LEFT JOIN vtiger_groups ON vtiger_groups.groupid = vtiger_crmentity.smownerid";
+		$query .= " LEFT JOIN vtiger_users ON vtiger_crmentity.smownerid = vtiger_users.id and vtiger_users.status='Active'";
+		$query .= " LEFT JOIN vtiger_users as vtigerCreatedBy ON vtiger_crmentity.smcreatorid = vtigerCreatedBy.id and vtigerCreatedBy.status='Active'";
+		$linkedModulesQuery = $this->db->pquery("SELECT distinct fieldname, tablename, columnname, relmodule FROM vtiger_field" .
+			" INNER JOIN vtiger_fieldmodulerel ON vtiger_fieldmodulerel.fieldid = vtiger_field.fieldid" .
+			" WHERE uitype='10' AND vtiger_fieldmodulerel.module=?", array($thismodule));
+		$linkedFieldsCount = $this->db->num_rows($linkedModulesQuery);
+		$rel_mods = array();
+		$rel_mods[$this->table_name] = 1;
+		for ($i=0; $i<$linkedFieldsCount; $i++) {
+			$related_module = $this->db->query_result($linkedModulesQuery, $i, 'relmodule');
+			//$fieldname = $this->db->query_result($linkedModulesQuery, $i, 'fieldname');
+			$columnname = $this->db->query_result($linkedModulesQuery, $i, 'columnname');
+			$tablename = $this->db->query_result($linkedModulesQuery, $i, 'tablename');
+			$other = CRMEntity::getInstance($related_module);
+			if (!empty($rel_mods[$other->table_name])) {
+				$rel_mods[$other->table_name] = $rel_mods[$other->table_name] + 1;
+				$alias = $other->table_name.$rel_mods[$other->table_name];
+				$query_append = "as $alias";
+			} else {
+				$alias = $other->table_name;
+				$query_append = '';
+				$rel_mods[$other->table_name] = 1;
+			}
+			$query .= " LEFT JOIN $other->table_name $query_append ON $alias.$other->table_index = $tablename.$columnname";
+		}
+		$query .= $this->getNonAdminAccessControlQuery($thismodule, $current_user);
 
-		// Preparing fields in array format
-		preg_match_all("/(?<=\.).*?(?=\s)/", $fields_list, $fields_array);
+		// Parsing the Queries.
+		preg_match_all("/(?<=\().*?(?=\.)/", $where, $tables);
 
-		// Replacing characters
-		$fields_array[0] = str_replace(array('(',')'),"", $fields_array[0]);
+		// Replacing unwanted characters
+		$tables = str_replace(array('(',')',' '),"", $tables[0]);
 
-		// Replacing fields
-		$fields_array[0] = str_replace(array('firstname', 'accountname'), array('Users.first_name', 'Accounts.accountname'), $fields_array[0]);
+		// Checking tables
+		if($tables){
+			foreach($tables as $table){
+				if(!strpos($query, $table)){
+					// Step 1: Retrieve the joins by QueryGenerator
 
-		// Setting fields
-		$queryGenerator->setFields($fields_array[0]);
+					// Step 2: Adding the missing join
+					
+				}
+			}
+		}
 
-		$query = 'SELECT '.$fields_list.' '.$queryGenerator->getFromClause().' '.$queryGenerator->getWhereClause();
+		die();
 
-		return $query;
+		$where_auto = " vtiger_crmentity.deleted=0";
+		if ($where != '') {
+			$query .= " WHERE ($where) AND $where_auto";
+		} else {
+			$query .= " WHERE $where_auto";
+		}
+		//return $query;
+
+		return $queryGenerator->getQuery();	
 	}
 
 	/**
