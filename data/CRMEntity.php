@@ -1377,17 +1377,13 @@ class CRMEntity {
 			}
 		}
 
-		die();
-
 		$where_auto = " vtiger_crmentity.deleted=0";
 		if ($where != '') {
 			$query .= " WHERE ($where) AND $where_auto";
 		} else {
 			$query .= " WHERE $where_auto";
 		}
-		//return $query;
-
-		return $queryGenerator->getQuery();	
+		return $query;
 	}
 
 	/**
