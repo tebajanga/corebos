@@ -108,6 +108,7 @@ $mod_strings = array(
 'CBDeleteRelatedTask' => 'Delete Related Records',
 'CBAssignRelatedTask' => 'Assign Related Records',
 'CBSelectcbMap' => 'Select Business Rule',
+'CBDeleteRelatedRecords' => 'Delete Related Records Business Rule',
 'ConvertInventoryModule' => 'Convert Inventory Module Records',
 'ConvertInventoryModuleMessage' => 'The field mappings is the default application mapping and can be adjusted using Field Mapping Business Rules.',
 
