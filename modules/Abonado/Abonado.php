@@ -129,20 +129,30 @@ class Abonado extends CRMEntity {
 		global $adb;
 
 		if ($event_type == 'module.postinstall') {
-			$this->setModuleSeqNumber('configure', $modulename, $modulename.'-', '0000001');
 			//Add Abonado Module to Customer Portal
 			global $adb;
 			$this->setModuleSeqNumber('configure', $moduleName, 'abn-', '0000001');
-			$this->addModuleToCustomerPortal();
 
 			include_once 'vtlib/Vtiger/Module.php';
 
-			// Mark the module as Standard module
-			$adb->pquery('UPDATE vtiger_tab SET customized=0 WHERE name=?', array($moduleName));
+			//Showing Abonado module in the related modules in the More Information Tab
+			$abonadoInstance = Vtiger_Module::getInstance('Abonado');
+			$abonadoLabel = 'Abonado';
 
-			//adds sharing accsess
-			$AbonadoModule  = Vtiger_Module::getInstance('Abonado');
-			Vtiger_Access::setDefaultSharing($AbonadoModule);
+			$accountInstance = Vtiger_Module::getInstance('Accounts');
+			$accountInstance->setRelatedlist($abonadoInstance, $abonadoLabel, array('ADD'), 'get_dependents_list');
+
+			$productInstance = Vtiger_Module::getInstance('Products');
+			$productInstance->setRelatedlist($abonadoInstance, $abonadoLabel, array('ADD'), 'get_dependents_list');
+
+			$assetInstance = Vtiger_Module::getInstance('Assets');
+			$assetInstance->setRelatedlist($abonadoInstance, $abonadoLabel, array('ADD'), 'get_dependents_list');
+
+			$cbZoneInstance = Vtiger_Module::getInstance('cbZone');
+			$cbZoneInstance->setRelatedlist($abonadoInstance, $abonadoLabel, array('ADD'), 'get_dependents_list');
+
+			$contactsInstance = Vtiger_Module::getInstance('Contacts');
+			$contactsInstance->setRelatedlist($abonadoInstance, $abonadoLabel, array('ADD'), 'get_dependents_list');
 		} elseif ($event_type == 'module.disabled') {
 			// TODO Handle actions when this module is disabled.
 		} elseif ($event_type == 'module.enabled') {

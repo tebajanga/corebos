@@ -739,8 +739,8 @@
 <helpinfo><![CDATA[]]></helpinfo>
 <masseditable>0</masseditable>
 <entityidentifier>
-<entityidfield>abn-00000001</entityidfield>
-<entityidcolumn>abn-00000001</entityidcolumn>
+<entityidfield>abonadoid</entityidfield>
+<entityidcolumn>abonadoid</entityidcolumn>
 </entityidentifier>
 </field>
 <field>
