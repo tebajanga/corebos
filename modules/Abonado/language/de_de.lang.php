@@ -17,6 +17,9 @@ $mod_strings = array(
 	'LBL_MODULEBLOCK_INFORMATION' => 'ModuleBlock Information',
 	'LBL_DESCRIPTION_INFORMATION' => 'Beschreibung',
 
-	'ModuleFieldLabel' => 'ModuleFieldLabel Text',
+	'LBL_ABONADO' => 'Abonnent',
+	'LBL_UBICACION' => 'Beliggenhed',
+	'LBL_PANEL' => 'Panel',
+	'LBL_OPERARIO' => 'Operatør',
 );
 ?>

@@ -17,6 +17,9 @@ $mod_strings = array(
 	'LBL_MODULEBLOCK_INFORMATION' => 'ModuleBlock Information',
 	'LBL_DESCRIPTION_INFORMATION' => 'Description',
 
-	'ModuleFieldLabel' => 'ModuleFieldLabel Text',
+	'LBL_ABONADO' => 'Előfizető',
+	'LBL_UBICACION' => 'Elhelyezkedés',
+	'LBL_PANEL' => 'Panel',
+	'LBL_OPERARIO' => 'Operátor',
 );
 ?>

@@ -16,6 +16,9 @@ $mod_strings = array(
 	'LBL_CUSTOM_INFORMATION' => 'Informazione Personalizzata',
 	'LBL_MODULEBLOCK_INFORMATION' => 'Informazione Blocco del Modulo',
 
-	'ModuleFieldLabel' => 'Testo Etichetta Campo Modulo',
+	'LBL_ABONADO' => 'Abbonato',
+	'LBL_UBICACION' => 'Posizione',
+	'LBL_PANEL' => 'Pannello',
+	'LBL_OPERARIO' => 'Operatore',
 );
 ?>
