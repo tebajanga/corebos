@@ -105,4 +105,11 @@
 	<classname>updateCreatedByField</classname>
 	<systemupdate>true</systemupdate>
 </changeSet>
+<changeSet>
+	<author>timothyanthony</author>
+	<description>Changeset to modify Accounts Search Permission</description>
+	<filename>build/changeSets/2018/modifyAccountsSearchPermission.php</filename>
+	<classname>modifyAccountsSearchPermission</classname>
+	<systemupdate>true</systemupdate>
+</changeSet>
 </updatesChangeLog>
