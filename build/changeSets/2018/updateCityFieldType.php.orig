@@ -36,7 +36,11 @@ class updateCityFieldType extends cbupdaterWorker {
 			$adb->query('ALTER TABLE vtiger_sobillads modify bill_city VARCHAR(200)');
             
 			$this->sendMsg('Changeset '.get_class($this).' applied!');
+<<<<<<< HEAD
+			//$this->markApplied();
+=======
 			$this->markApplied();
+>>>>>>> 169e48c04ede72a88fed8fadc7e480eb2c28c703
 		}
 		$this->finishExecution();
 	}

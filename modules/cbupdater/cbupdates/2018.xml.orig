@@ -112,6 +112,8 @@
 	<classname>updateCityFieldType</classname>
 	<systemupdate>true</systemupdate>
 </changeSet>
+<<<<<<< HEAD
+=======
 <changeSet>
 	<author>joebordes</author>
 	<description>Eliminate UIType 116</description>
@@ -119,4 +121,5 @@
 	<classname>eliminateUIType116</classname>
 	<systemupdate>true</systemupdate>
 </changeSet>
+>>>>>>> 169e48c04ede72a88fed8fadc7e480eb2c28c703
 </updatesChangeLog>
