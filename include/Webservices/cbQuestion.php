@@ -23,8 +23,39 @@ include_once 'modules/cbQuestion/cbQuestion.php';
  * qid: ID of the question
  * format: The format of the answer [table, chart]
  */
-function cbwsGetAnswer($qid, $format) {
-    $current_user = Users::getActiveAdminUser();
+function cbwsGetAnswer($qid, $format, $user) {
+    global $adb;
+
+    $webserviceObject = VtigerWebserviceObject::fromId($adb, $qid);
+	$handlerPath = $webserviceObject->getHandlerPath();
+	$handlerClass = $webserviceObject->getHandlerClass();
+
+	require_once $handlerPath;
+
+	$handler = new $handlerClass($webserviceObject, $user, $adb, $log);
+	$meta = $handler->getMeta();
+	$entityName = $meta->getObjectEntityName($qid);
+	$types = vtws_listtypes(null, $user);
+	if (!in_array($entityName, $types['types'])) {
+		throw new WebServiceException(WebServiceErrorCode::$ACCESSDENIED, 'Permission to perform the operation is denied');
+	}
+	if ($meta->hasReadAccess()!==true) {
+		throw new WebServiceException(WebServiceErrorCode::$ACCESSDENIED, 'Permission to read is denied');
+	}
+
+	if ($entityName !== $webserviceObject->getEntityName()) {
+		throw new WebServiceException(WebServiceErrorCode::$INVALIDID, 'Id specified is incorrect');
+	}
+
+	if (!$meta->hasPermission(EntityMeta::$RETRIEVE, $qid)) {
+		throw new WebServiceException(WebServiceErrorCode::$ACCESSDENIED, 'Permission to read given object is denied');
+	}
+
+	$qidComponents = vtws_getIdComponents($qid);
+	if (!$meta->exists($qidComponents[1])) {
+		throw new WebServiceException(WebServiceErrorCode::$RECORDNOTFOUND, 'Record you are trying to access is not found');
+    }
+    
     if ($answer = cbQuestion::getAnswer($qid)) {
         if (strtolower($format) == "chart") {
             return cbQuestion::getChartFromAnswer($answer);
