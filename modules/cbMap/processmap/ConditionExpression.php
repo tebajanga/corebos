@@ -45,6 +45,10 @@
   </function>
  </map>
 
+ <map>
+ 	<template>The user assigned to the record is: $(assigned_user_id : (Users) first_name) $(assigned_user_id : (Users) last_name)</template>
+ </map>
+
  *************************************************************************************************/
 
 require_once 'modules/com_vtiger_workflow/include.inc';
@@ -54,6 +58,7 @@ require_once 'modules/com_vtiger_workflow/VTSimpleTemplate.inc';
 require_once 'modules/com_vtiger_workflow/VTEntityCache.inc';
 require_once 'modules/com_vtiger_workflow/VTWorkflowUtils.php';
 require_once 'modules/com_vtiger_workflow/expression_engine/include.inc';
+require_once 'modules/com_vtiger_workflow/VTSimpleTemplateOnData.inc';
 require_once 'include/Webservices/Retrieve.php';
 
 class ConditionExpression extends processcbMap {
@@ -96,6 +101,18 @@ class ConditionExpression extends processcbMap {
 				}
 			}
 			$testexpression = trim($testexpression, ',') . ');';
+			eval($testexpression);
+		} elseif (isset($xml->template)) {
+			$template = (String)$xml->template;
+			$testexpression = trim($template);
+			if (substr($testexpression, 0, 1) != '$') {
+				$testexpression = '$' . $testexpression;
+			}
+			$entityCache = new VTEntityCache($current_user);
+			$ct = new VTSimpleTemplate($testexpression);
+			$delim = '';
+			$value = $ct->render($entityCache, $entityId).$delim;
+			$testexpression = '$exprEvaluation = '.$value.'';
 			eval($testexpression);
 		}
 		return $exprEvaluation;
