@@ -14,10 +14,10 @@
  * at <http://corebos.org/documentation/doku.php?id=en:devel:vpl11>
  *************************************************************************************************/
 
-function __cb_is_numeric($value) {
-    return is_numeric($value);
+function __cb_is_numeric($arr) {
+    return is_numeric($arr[0]);
 }
 
-function __cb_is_string($value) {
-    return is_string($value);
+function __cb_is_string($arr) {
+    return is_string($arr[0]);
 }
