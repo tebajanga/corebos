@@ -386,6 +386,9 @@
 <!-- header - master tabs -->
 
 {include file="Clock.tpl"}
+{include file="webcmp.tpl"}
+
+{}
 
 <div id="qcform" style="position:absolute;width:700px;top:80px;left:450px;z-index:90000;"></div>
 
