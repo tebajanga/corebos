@@ -423,6 +423,10 @@ class WorkFlowScheduler {
 				$hours = $condition['value'];
 				$value = date('Y-m-d H:i:s', strtotime('-'.$hours.' hours'));
 				break;
+			case 'monthday':
+				$date = $condition['value'];
+				$value = date('m-d',strtotime($date));
+				break;
 		}
 		@date_default_timezone_set($default_timezone);
 		return $value;
