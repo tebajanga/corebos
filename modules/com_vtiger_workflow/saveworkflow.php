@@ -15,6 +15,7 @@ require_once 'VTWorkflowManager.inc';
 require_once 'VTWorkflowUtils.php';
 require_once 'modules/com_vtiger_workflow/VTTaskManager.inc';
 require_once 'include/Webservices/ExecuteWorkflow.php';
+require_once 'modules/com_vtiger_workflow/WorkFlowScheduler.php';
 
 function vtWorkflowSave($adb, $request) {
 	global $current_language, $current_user;
@@ -143,32 +144,10 @@ function vtWorkflowSave($adb, $request) {
 		$returnUrl=$module->editWorkflowUrl($wf->id);
 	}
 
-	if (isset($request['btnmalaunch']) && $options && $options != 'conditions') {
-		$wsid = vtws_getEntityId($moduleName).'x';
-		$context = '[]';
-		$crmids = array();
-		if ($options == 'onerecord') {
-			$crmids[] = $wsid.$onerecord;
-			cbwsExecuteWorkflowWithContext($wf->id, json_encode($crmids), $context, $current_user);
-		} else {
-			$ids = null;
-			if ($options == 'cbquestion') {
-				$ids = cbwsGetAnswer(vtws_getEntityId('cbQuestion').'x'.$cbquestion, '', $current_user);
-			} elseif ($options == 'recordset') {
-				$ids = cbws_cbRule(vtws_getEntityId('cbMap').'x'.$recordset, array(), $current_user);
-			}
-			if ($ids) {
-				foreach ($ids as $crmid) {
-					$crmids[] = $wsid.$crmid;
-				}
-				$cbmq = coreBOS_MQTM::getInstance();
-				$msg = array(
-					'wfid' => $wf->id,
-					'crmids' => $crmids,
-				);
-				$cbmq->sendMessage('wfLaunchNowChannel', 'malaunchnow', 'malaunchnow', 'Data', '1:M', 0, 8640000, 0, 0, json_encode($msg));
-			}
-		}
+	if (isset($request['btnmalaunch']) && $options && $options != '') {
+		$crmids = WorkFlowScheduler::getEligibleWorkflowRecords($wf);
+		var_dump($crmids);
+		die();
 		if (count($crmids) > 0) {
 			coreBOS_Session::set('malaunch_records', $crmids);
 		}

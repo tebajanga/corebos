@@ -163,15 +163,7 @@ function vtWorkflowEdit($adb, $request, $requestUrl, $current_language, $app_str
 		$malaunch_records = coreBOS_Session::get('malaunch_records');
 		$smarty->assign('malaunch_records', $malaunch_records);
 		$smarty->assign('ERROR_MESSAGE_CLASS', 'cb-alert-success');
-		$msg = $mod['Records execution success'];
-		$msg .= '<br />';
-		$msg .= $mod['Records'];
-		$msg .= '<br />';
-		$msg .= '<ul>';
-		foreach ($malaunch_records as $record) {
-			$msg .= '<li>'.$record.'</li>';
-		}
-		$msg .= '</ul>';
+		$msg = count($malaunch_records). ' '. $mod['Records processed'];
 		$smarty->assign('ERROR_MESSAGE', $msg);
 		coreBOS_Session::delete('malaunch_records');
 	}

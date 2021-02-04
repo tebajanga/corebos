@@ -154,7 +154,7 @@ class WorkFlowScheduler {
 		} elseif ($workflow->options == 'cbquestion') {
 			$recordsList = cbwsGetAnswer(vtws_getEntityId('cbQuestion').'x'.$workflow->cbquestion, '', $current_user);
 		} elseif ($workflow->options == 'recordset') {
-			$recordsList = cbws_cbRule(vtws_getEntityId('cbMap').'x'.$workflow->recordset, array(), $current_user);
+			$recordsList = cbws_cbRule(vtws_getEntityId('cbMap').'x'.$workflow->recordset, json_encode(array()), $current_user);
 		} elseif ($workflow->options == 'onerecord') {
 			$recordsList[] = $workflow->onerecord;
 		}
